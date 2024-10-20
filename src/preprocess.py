@@ -1,6 +1,6 @@
 import re
-def tokenize(str):
-    return str.split()
+def tokenize(text):
+    return text.split()
 
 
 def to_lowerCase(tokens):
@@ -45,23 +45,3 @@ def vectorize_all_docs(docs, vocab):
         vectors.append(vectorize_doc(tokens, vocab))
     return vectors
 
-
-# Example usage:
-sample_texts = [
-    "I loved this movie! It's so exciting.",
-    "This movie was terrible, I hated it!",
-    "The plot was great, but the acting was bad."
-]
-
-# Step 1: Preprocess all the sample texts
-preprocessed_docs = [preprocess_text(text) for text in sample_texts]
-
-# Step 2: Create the vocabulary
-vocab = create_vocabulary(preprocessed_docs)
-print(f"Vocabulary: {vocab}")
-
-# Step 3 & 4: Vectorize all the documents
-vectors = vectorize_all_docs(preprocessed_docs, vocab)
-print("BoW Representation (Vectors):")
-for i, vector in enumerate(vectors):
-    print(f"Document {i+1}: {vector}")

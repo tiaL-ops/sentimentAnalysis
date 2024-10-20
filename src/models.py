@@ -1,6 +1,7 @@
 
 
 import math
+from preprocess import preprocess_text
 """
 Step 1: Calculate Class Priors:
 Input: A list of labeled reviews (positive or negative).
@@ -71,14 +72,14 @@ Calculate the posterior probability for each class (positive and negative).
 
 def predict(review, vocab, likelihood_pos, likelihood_neg, prior_pos, prior_neg):
    
-    tokens = preprocess_text(review)
+    
     
     
     log_prob_pos = math.log(prior_pos)
     log_prob_neg = math.log(prior_neg)
     
     
-    for token in tokens:
+    for token in review:
         if token in vocab:
             log_prob_pos += math.log(likelihood_pos[token])
             log_prob_neg += math.log(likelihood_neg[token])
