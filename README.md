@@ -1,11 +1,14 @@
-### Sentiment Analysis from Scratch
+# **Sentiment Analysis from Scratch** (Ongoing)
 
-The goal of this project is to detect the sentiment (positive or negative) of movie reviews from the IMDb dataset. This project focuses on AI model building in the field of Natural Language Processing (NLP), where each component of the sentiment analysis pipeline is manually implemented. It includes data loading, text preprocessing, feature extraction, and custom classifiers. Techniques such as Bag of Words, TF-IDF, and Naive Bayes are built from scratch using only numpy, along with a simple neural network. This approach highlights a deep understanding of how AI models are created and trained on text data.
-------------------------------------------------------
-## Technical Skills & Features:
-- Manual data loading and parsing
-- Custom text preprocessing (tokenization, stop word removal, etc.)
-- Feature extraction (Bag of Words, TF-IDF)
-- Naive Bayes classifier and simple neural networks built from scratch
-- Numerical computation with numpy
-- AI model building focused on text data and sentiment analysis
+This project classifies movie reviews from the IMDb dataset as **positive** or **negative**, with a focus on building sentiment analysis models from the ground up using basic tools like **numpy**. Every stage of the NLP pipeline, including data loading, preprocessing, feature extraction, and classification, is manually implemented to provide a deep understanding of AI model construction.
+
+---
+
+## **Key Features and Project Progress:** 
+- **Manual Data Loading**: Custom parsing of IMDb movie reviews. ✅
+- **Text Preprocessing**: Tokenization, stop word removal, and text cleaning. ✅
+- **Feature Extraction**: Implemented both **Bag of Words (BoW)** and **TF-IDF** from scratch. ✅
+- **Custom Models**: Built a **Naive Bayes classifier** and a basic **neural network** using only numpy.
+- **Numerical Computation**: Leveraged numpy for matrix operations and computations.
+
+---
