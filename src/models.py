@@ -9,20 +9,17 @@ Task: Calculate the prior probabilities for each class.
 This is the probability of a document being positive or negative based on the entire training set.
 
 """
-def classPrior(labels):
-    count_positive = 0
-    count_negative = 0
+def classPrior(y_train):
+   
+    smoothing_factor = 1  # Laplace smoothing factor
+    total_samples = len(y_train)
     
-    for label in labels:
-        if label == 'positive':
-            count_positive += 1
-        elif label == 'negative':
-            count_negative += 1
-
-    total = len(labels)
     
-    prior_pos = count_positive / total  
-    prior_neg = count_negative / total  
+    pos_count = sum(y_train)
+    neg_count = total_samples - pos_count
+    
+    prior_pos = (pos_count + smoothing_factor) / (total_samples + 2 * smoothing_factor)
+    prior_neg = (neg_count + smoothing_factor) / (total_samples + 2 * smoothing_factor)
     
     return prior_pos, prior_neg
 
