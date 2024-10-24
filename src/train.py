@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from preprocess import preprocess_text,create_vocabulary,vectorize_all_docs
 from data_loader import load_imdb_data,read_by_batches
 from models import classPrior,likelihood,predict
-
+from tf_idf import compute_tf_idf
 
 # Load the data in batches because my computer is old
 file_path = '../data/IMDB Dataset.csv'  
@@ -48,3 +48,31 @@ accuracy = correct_predictions / len(y_test)
 
 print(f"Accuracy of Naive Bayes model: {accuracy * 100:.2f}%")
 
+
+#Tfidt Approach
+X_tfidf= compute_tf_idf(processed_reviews)
+X_train_tfidf, X_test_tfidf, y_train_tfidf, y_test_tfidf = train_test_split(X_tfidf, labels, test_size=0.2, random_state=42)
+
+def convert_dicts_to_vectors(tfidf_docs, vocab):
+    vectors = []
+    for doc in tfidf_docs:
+        vector = [doc.get(word, 0) for word in vocab]
+        vectors.append(vector)
+    return vectors
+
+X_train_tfidf = convert_dicts_to_vectors(X_train_tfidf, vocab)
+X_test_tfidf = convert_dicts_to_vectors(X_test_tfidf, vocab)
+
+
+prior_pos_tfidf, prior_neg_tfidf = classPrior(y_train_tfidf)
+likelihood_pos_tfidf, likelihood_neg_tfidf = likelihood(X_train_tfidf, y_train_tfidf, vocab)
+
+predictions_tfidf = [predict(review, vocab, likelihood_pos_tfidf, likelihood_neg_tfidf, prior_pos_tfidf, prior_neg_tfidf) for review in X_test_tfidf]
+
+correct_predictions_tfidf = sum([1 for i in range(len(predictions_tfidf)) if predictions_tfidf[i] == y_test_tfidf[i]])
+accuracy_tfidf = correct_predictions_tfidf / len(y_test_tfidf)
+
+
+print(f"Comparison of Naive Bayes Model Performance:")
+print(f"BoW Accuracy: {accuracy* 100:.2f}%")
+print(f"TF-IDF Accuracy: {accuracy_tfidf * 100:.2f}%")
