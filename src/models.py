@@ -2,6 +2,7 @@
 
 import math
 from preprocess import preprocess_text
+import numpy as np
 """
 Step 1: Calculate Class Priors:
 Input: A list of labeled reviews (positive or negative).
@@ -68,9 +69,6 @@ Calculate the posterior probability for each class (positive and negative).
 
 
 def predict(review, vocab, likelihood_pos, likelihood_neg, prior_pos, prior_neg):
-   
-    
-    
     
     log_prob_pos = math.log(prior_pos)
     log_prob_neg = math.log(prior_neg)
@@ -111,3 +109,83 @@ def evaluate(test_docs, test_labels, review, vocab, likelihood_pos, likelihood_n
     return accuracy
 
 
+
+def initialize_weights(input_size, hidden_layer_size, output_layer_size):
+    """Initialize weights and biases for input, hidden, and output layers."""
+    W_input_hidden = np.random.randn(input_size, hidden_layer_size) * 0.01
+    b_hidden = np.zeros((1, hidden_layer_size))
+    
+    W_hidden_output = np.random.randn(hidden_layer_size, output_layer_size) * 0.01
+    b_output = np.zeros((1, output_layer_size))
+    
+    return W_input_hidden, b_hidden, W_hidden_output, b_output
+
+
+def forward_propagation(X, weights, biases, activations):
+    """Perform forward propagation through the network."""
+    A = X
+    caches = []
+    
+    for i in range(len(weights) - 1):
+        Z = np.dot(A, weights[i]) + biases[i]
+        A = activations[i](Z)
+        caches.append((A, Z))  
+    
+    Z_output = np.dot(A, weights[-1]) + biases[-1]
+    A_output = activations[-1](Z_output)
+    caches.append((A_output, Z_output))
+    
+    return A_output, caches
+
+
+def backpropagation(X, y_true, caches, weights, activations_derivative):
+    """Compute gradients for each layer using backpropagation."""
+    m = X.shape[0]
+    dW = []
+    db = []
+    dA = caches[-1][0] - y_true  
+
+    for i in reversed(range(len(weights))):
+        dZ = dA * activations_derivative[i](caches[i][1])
+        dW.insert(0, (1 / m) * np.dot(caches[i-1][0].T, dZ) if i > 0 else np.dot(X.T, dZ))
+        db.insert(0, (1 / m) * np.sum(dZ, axis=0, keepdims=True))
+        dA = np.dot(dZ, weights[i].T)
+    
+    return dW, db
+
+def compute_loss(y_true, y_pred):
+    """Binary cross-entropy loss for binary classification."""
+    m = y_true.shape[0]
+    loss = -(1/m) * np.sum(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+    return loss
+
+
+def initialize_rnn_weights(vocab_size, hidden_size, output_size):
+    """Initialize weights for an RNN model."""
+    np.random.seed(0)  
+    Wx = np.random.randn(hidden_size, vocab_size) * 0.01  # Input to hidden weights
+    Wh = np.random.randn(hidden_size, hidden_size) * 0.01  # Hidden to hidden weights
+    Wo = np.random.randn(output_size, hidden_size) * 0.01  # Hidden to output weights
+    hidden_state = np.zeros((hidden_size, 1))  # Initialize hidden state to zeros
+    return Wx, Wh, Wo, hidden_state
+
+
+def one_hot_encoding(vocab):
+    return {word: i for i, word in enumerate(vocab)}
+
+def tanh(x):
+    return np.tanh(x)
+
+
+def calculate_accuracy(predictions, true_labels):
+  
+    predictions = np.array(predictions).flatten()
+    true_labels = np.array(true_labels).flatten()
+    
+    if predictions.shape != true_labels.shape:
+        raise ValueError("Shape mismatch: predictions and true_labels must have the same shape.")
+    
+  
+    correct_predictions = np.sum(predictions == true_labels)
+    accuracy = (correct_predictions / len(true_labels)) * 100
+    return accuracy
